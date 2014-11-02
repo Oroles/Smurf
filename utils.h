@@ -18,5 +18,5 @@ QString createArpFilter(QString ip);
 QString createTcpFilter(QString ip);
 QString getMacAddressFromARP(const u_char* package);
 QString getMacFromPackage(sniff_arp *arp);
-QString getBroadcastAddress(QString ip);
+QString getBroadcastAddress(QString ip, QNetworkInterface networkInterface);
 #endif // UTILS_H

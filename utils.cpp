@@ -125,8 +125,34 @@ QString getMacFromPackage(sniff_arp *arp)
     return result.toUpper();
 }
 
-QString getBroadcastAddress(QString ip)
+QString getBroadcastAddress(QString ip, QNetworkInterface networkInterface)
 {
     QString result;
+    QString netmask;
+    QList<QNetworkAddressEntry> address = networkInterface.addressEntries();
+    for( int i = 0; i < address.size(); ++i )
+    {
+        QString foundIp = address[i].ip().toString();
+        if ( foundIp.size() == ip.size() )
+        {
+            netmask = address[i].netmask().toString();
+        }
+    }
+    if ( netmask != "" )
+    {
+        QList<byte> splitNetmask = splitIpAddress( netmask, "." );
+        QList<byte> splitIp = splitIpAddress( ip, "." );
+        for ( int i = 0; i < splitNetmask.size(); ++i )
+        {
+            splitIp[i] = (splitIp[i] | (~splitNetmask[i]));
+        }
+        result = QString::number( splitIp[0] ) + "." + QString::number( splitIp[1] ) + "."+
+                 QString::number( splitIp[2] ) + "." + QString::number( splitIp[3] );
+    }
+    else
+    {
+        result = "255.255.255.255";
+    }
+
     return result;
 }

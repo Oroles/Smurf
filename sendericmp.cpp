@@ -83,7 +83,7 @@ void SenderICMP::createPackage(u_char* package)
     ip.ip_src.byte2 =  ipAddress[1];
     ip.ip_src.byte3 =  ipAddress[2];
     ip.ip_src.byte4 =  ipAddress[3];
-    QList<u_char> broadcastAddress = splitIpAddress( getBroadcastAddress(destIp), "." );
+    QList<u_char> broadcastAddress = splitIpAddress( getBroadcastAddress(destIp, currentNetwork), "." );
     ip.ip_dst.byte1 = broadcastAddress[0];
     ip.ip_dst.byte2 = broadcastAddress[1];
     ip.ip_dst.byte3 = broadcastAddress[2];
