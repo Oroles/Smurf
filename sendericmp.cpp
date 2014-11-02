@@ -80,10 +80,11 @@ void SenderICMP::createPackage(u_char* package)
     ip.ip_src.byte2 =  ipAddress[1];
     ip.ip_src.byte3 =  ipAddress[2];
     ip.ip_src.byte4 =  ipAddress[3];
-    ip.ip_dst.byte1 = 255;
-    ip.ip_dst.byte2 = 255;
-    ip.ip_dst.byte3 = 255;
-    ip.ip_dst.byte4 = 255;
+    QList<u_char> broadcastAddress = splitIpAddress( getBroadcastAddress(destIp), "." );
+    ip.ip_dst.byte1 = broadcastAddress[0];
+    ip.ip_dst.byte2 = broadcastAddress[1];
+    ip.ip_dst.byte3 = broadcastAddress[2];
+    ip.ip_dst.byte4 = broadcastAddress[3];
     ip.ip_sum = ( cksum( &ip, SIZE_IPV4, 0 ) );
 
     sniff_icmp icmp;
