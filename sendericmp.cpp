@@ -10,7 +10,10 @@ void SenderICMP::startWork()
     running = true;
     u_char package[100];
     this->createPackage(package);
-    pcap_sendpacket( handle, package, ICMP_PACKAGE_SIZE );
+    while( running )
+    {
+        pcap_sendpacket( handle, package, ICMP_PACKAGE_SIZE );
+    }
 }
 
 void SenderICMP::stopWork()
