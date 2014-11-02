@@ -30,3 +30,9 @@ void MainWindow::stopClicked()
 {
     controler->stopSendingPackage();
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    controler->stopSendingPackage();
+    event->accept();
+}
