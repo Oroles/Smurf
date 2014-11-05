@@ -25,14 +25,14 @@ MainController::MainController(QObject *parent) :
 
 MainController::~MainController()
 {
-    senderICMPThread.wait();
     senderICMPThread.quit();
+    senderICMPThread.wait();
 
-    senderARPThread.wait();
     senderARPThread.quit();
+    senderARPThread.wait();
 
-    receiverThread.wait();
     receiverThread.quit();
+    receiverThread.wait();
 }
 
 void MainController::sendPackages(QString ip)
@@ -67,8 +67,9 @@ void MainController::initReceiver()
 void MainController::initSenderICMP(QString ip)
 {
     senderICMP->setHandle( controler->get_handle() );
-    senderICMP->setIp( ip );
     senderICMP->setNetworkInterface( controler->getNetworkInterface() );
+    senderICMP->setIp( ip );
+
 }
 
 void MainController::initSenderARP(QString ip)
