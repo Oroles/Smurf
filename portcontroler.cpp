@@ -61,24 +61,32 @@ int PortControler::findNameInPcap(QNetworkInterface &network)
 int PortControler::getActiveNetworkInterfaceIndex()
 {
     QList<QNetworkInterface> networkInterfaces = QNetworkInterface::allInterfaces();
-    for( int i = 0; i < networkInterfaces.size(); ++i )
+    int currentIndex = -1;
+    QNetworkInterface auxCurrentInterface;
+    for( auto inter : networkInterfaces )
     {
-        QNetworkInterface::InterfaceFlags flags = networkInterfaces[i].flags();
+        QNetworkInterface::InterfaceFlags flags = inter.flags();
         if ( ( flags & QNetworkInterface::IsRunning ) != 0 )
         {
-            int index = this->findNameInPcap( networkInterfaces[i] );
+            int index = this->findNameInPcap( inter );
             if ( index != -1 )
             {
-                QString name =  networkInterfaces[i].humanReadableName();
+                QString name =  inter.humanReadableName();
+                if ( name == "Wi-Fi")
+                {
+                    auxCurrentInterface = inter;
+                    currentIndex = index;
+                }
                 if ( name == "Ethernet" )
                 {
-                    currentNetwork = networkInterfaces[i];
+                    currentNetwork = inter;
                     return index;
                 }
             }
         }
     }
-    return -1;
+    currentNetwork = auxCurrentInterface;
+    return currentIndex;
 }
 
 pcap_t** PortControler::get_handle()
