@@ -1,6 +1,11 @@
 #ifndef SENDER_H
 #define SENDER_H
 
+/*
+ * This file is used to send and check ICMP package
+ */
+
+
 #include <QObject>
 #include <QString>
 #include <QNetworkInterface>
