@@ -1,5 +1,7 @@
 #include "utils.h"
 
+//This file can be used to in other projects
+
 byte modifyByte( byte val )
 {
     if ( val > 57 )
