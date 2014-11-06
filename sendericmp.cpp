@@ -8,9 +8,9 @@ SenderICMP::SenderICMP(QObject *parent) :
 void SenderICMP::startWork()
 {
     running = true;
-    u_char package[100];
-    this->createPackage(package);
-    while( running )
+    //u_char package[100];
+    //this->createPackage(package);
+    //while( running )
     {
         //pcap_sendpacket( handle, package, ICMP_PACKAGE_SIZE );
         this->sendOnePackage();

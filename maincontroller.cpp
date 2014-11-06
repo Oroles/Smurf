@@ -21,8 +21,7 @@ MainController::MainController(QObject *parent) :
     receiver->moveToThread( &receiverThread );
     connect( &receiverThread, SIGNAL(destroyed()), receiver, SLOT(deleteLater()));
     connect( this, SIGNAL(startReceiver()), receiver, SLOT(startWork()));
-    //connect( receiver, SIGNAL(newPackage(u_char*)), senderARP, SLOT(receivePackage(u_char*)));
-
+    //connect( receiver, SIGNAL(newPackage(u_char*)), senderICMP, SLOT(receivePackage(u_char*)));
 
     connect( receiver, SIGNAL(newPackage(u_char*)), senderICMP, SLOT(receivePackage(u_char*)));
     controler->initPcap();
@@ -36,8 +35,8 @@ MainController::MainController(QObject *parent) :
     senderICMP->setNetworkInterface( controler->getNetworkInterface() );
     senderICMP->setIp( findLocalIp( controler->getNetworkInterface() ) );
     senderICMP->setMac( findLocalMac( controler->getNetworkInterface() ) );
-    senderICMPThread.start();
-    emit startSendingICMP();
+    connect( this, SIGNAL(startSendingOneICMP()),this,SLOT(sendOneICMP()),Qt::QueuedConnection);
+    emit startSendingOneICMP();
 }
 
 MainController::~MainController()
@@ -114,4 +113,9 @@ void MainController::foundIpAddress(QString ipAddress)
     {
         emit newIpAddress(ipAddress);
     }
+}
+
+void MainController::sendOneICMP()
+{
+    senderICMP->sendOnePackage();
 }

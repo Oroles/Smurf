@@ -20,6 +20,7 @@ public:
     void stopSendingPackage();
 signals:
     void startSendingICMP();
+    void startSendingOneICMP();
     void startSendingARP();
     void startReceiver();
     void newIpAddress(QString address);
@@ -27,8 +28,10 @@ signals:
 public slots:
     void foundMacAddress(QString macAddress);
     void foundIpAddress(QString ipAddress);
+    void sendOneICMP();
 
 private:
+
     void initControler();
     void initSenderARP(QString ip);
     void initSenderICMP(QString ip);
