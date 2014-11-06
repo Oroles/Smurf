@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QCloseEvent>
 
 #include "maincontroller.h"
 
@@ -21,6 +22,7 @@ public:
 private slots:
     void sendPackagesClicked();
     void stopClicked();
+    void displayNewData(QString data);
 
 private:
     Ui::MainWindow *ui;

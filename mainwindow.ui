@@ -14,7 +14,7 @@
    <string>Smurf</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>11</x>
@@ -50,11 +50,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QPlainTextEdit" name="plainTextEditResults">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <widget class="QTextEdit" name="textEdit"/>
      </item>
     </layout>
    </widget>

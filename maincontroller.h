@@ -22,9 +22,11 @@ signals:
     void startSendingICMP();
     void startSendingARP();
     void startReceiver();
+    void newIpAddress(QString address);
 
 public slots:
     void foundMacAddress(QString macAddress);
+    void foundIpAddress(QString ipAddress);
 
 private:
     void initControler();

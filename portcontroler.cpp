@@ -8,7 +8,8 @@ PortControler::PortControler(QObject *parent) :
 bool PortControler::initPcap()
 {
     pcap_findalldevs( &allDevs, errBuf );
-    int index = getActiveNetworkInterfaceIndex();
+    currentNetwork = getActiveNetworkInterfaceIndex();
+    int index = findNameInPcap( currentNetwork );
     if( index != -1 )
     {
         int  i = 0;
@@ -58,10 +59,9 @@ int PortControler::findNameInPcap(QNetworkInterface &network)
     return -1;
 }
 
-int PortControler::getActiveNetworkInterfaceIndex()
+QNetworkInterface PortControler::getActiveNetworkInterfaceIndex()
 {
     QList<QNetworkInterface> networkInterfaces = QNetworkInterface::allInterfaces();
-    int currentIndex = -1;
     QNetworkInterface auxCurrentInterface;
     for( auto inter : networkInterfaces )
     {
@@ -75,18 +75,15 @@ int PortControler::getActiveNetworkInterfaceIndex()
                 if ( name == "Wi-Fi")
                 {
                     auxCurrentInterface = inter;
-                    currentIndex = index;
                 }
                 if ( name == "Ethernet" )
                 {
-                    currentNetwork = inter;
-                    return index;
+                    return auxCurrentInterface;
                 }
             }
         }
     }
-    currentNetwork = auxCurrentInterface;
-    return currentIndex;
+    return auxCurrentInterface;
 }
 
 pcap_t** PortControler::get_handle()

@@ -24,7 +24,7 @@ public slots:
 private:
 
     int findNameInPcap(QNetworkInterface &network);
-    int getActiveNetworkInterfaceIndex();
+    QNetworkInterface getActiveNetworkInterfaceIndex();
 
     pcap_if_t* allDevs;
     pcap_if_t* currDev;

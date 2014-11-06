@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     controler = new MainController(this);
+    connect( controler, SIGNAL(newIpAddress(QString)), this, SLOT(displayNewData(QString)));
 
     connect(this->ui->pushButtonSend,SIGNAL(clicked()),this,SLOT(sendPackagesClicked()));
     connect(this->ui->pushButtonStop,SIGNAL(clicked()),this,SLOT(stopClicked()));
@@ -35,4 +36,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     controler->stopSendingPackage();
     event->accept();
+}
+
+void MainWindow::displayNewData(QString data)
+{
+    QString oldData = ui->textEdit->toPlainText();
+    oldData += data;
+    oldData += "\n";
+    ui->textEdit->setText( oldData );
 }

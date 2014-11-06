@@ -21,11 +21,13 @@ public:
     void setIp(QString ip);
     void setMac(QString mac);
     void setNetworkInterface(QNetworkInterface inter);
+    void sendOnePackage();
 signals:
-
+    void foundIpAddress(QString address);
 public slots:
     void startWork();
     void stopWork();
+    void receivePackage(u_char* package);
 
 private:
     void createPackage(u_char *package);
@@ -36,9 +38,6 @@ private:
     QString destIp;
     QString destMac;
     QNetworkInterface currentNetwork;
-
-
-
 };
 
 #endif // SENDER_H

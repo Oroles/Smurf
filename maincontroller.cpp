@@ -8,7 +8,8 @@ MainController::MainController(QObject *parent) :
     senderICMP = new SenderICMP();
     senderICMP->moveToThread( &senderICMPThread );
     connect( &senderICMPThread, SIGNAL(destroyed()), senderICMP, SLOT(deleteLater()));
-    connect( this, &MainController::startSendingICMP, senderICMP, &SenderICMP::startWork );
+    connect( this, SIGNAL(startSendingICMP()), senderICMP, SLOT(startWork()) );
+    connect( senderICMP, SIGNAL(foundIpAddress(QString)), this, SLOT(foundIpAddress(QString)));
 
     senderARP = new SenderARP();
     senderARP->moveToThread( &senderARPThread );
@@ -20,7 +21,23 @@ MainController::MainController(QObject *parent) :
     receiver->moveToThread( &receiverThread );
     connect( &receiverThread, SIGNAL(destroyed()), receiver, SLOT(deleteLater()));
     connect( this, SIGNAL(startReceiver()), receiver, SLOT(startWork()));
-    connect( receiver, SIGNAL(newPackage(u_char*)), senderARP, SLOT(receivePackage(u_char*)));
+    //connect( receiver, SIGNAL(newPackage(u_char*)), senderARP, SLOT(receivePackage(u_char*)));
+
+
+    connect( receiver, SIGNAL(newPackage(u_char*)), senderICMP, SLOT(receivePackage(u_char*)));
+    controler->initPcap();
+    controler->setFilter( createICMPFilter( findLocalIp( controler->getNetworkInterface() )));
+
+    receiver->setHandle( controler->get_handle() );
+    receiverThread.start();
+    emit startReceiver();
+
+    senderICMP->setHandle( controler->get_handle() );
+    senderICMP->setNetworkInterface( controler->getNetworkInterface() );
+    senderICMP->setIp( findLocalIp( controler->getNetworkInterface() ) );
+    senderICMP->setMac( findLocalMac( controler->getNetworkInterface() ) );
+    senderICMPThread.start();
+    emit startSendingICMP();
 }
 
 MainController::~MainController()
@@ -37,6 +54,9 @@ MainController::~MainController()
 
 void MainController::sendPackages(QString ip)
 {
+    disconnect( receiver, SIGNAL(newPackage(u_char*)), senderICMP, SLOT(receivePackage(u_char*)));
+    connect( receiver, SIGNAL(newPackage(u_char*)), senderARP, SLOT(receivePackage(u_char*)));
+
     initControler();
     initReceiver();
     initSenderARP(ip);
@@ -69,7 +89,6 @@ void MainController::initSenderICMP(QString ip)
     senderICMP->setHandle( controler->get_handle() );
     senderICMP->setNetworkInterface( controler->getNetworkInterface() );
     senderICMP->setIp( ip );
-
 }
 
 void MainController::initSenderARP(QString ip)
@@ -87,4 +106,12 @@ void MainController::foundMacAddress(QString macAddress)
     senderICMP->setMac( macAddress );
     senderICMPThread.start();
     emit startSendingICMP();
+}
+
+void MainController::foundIpAddress(QString ipAddress)
+{
+    if ( ipAddress != "" )
+    {
+        emit newIpAddress(ipAddress);
+    }
 }

@@ -98,6 +98,11 @@ QString createTcpFilter(QString ip)
     return "dst host " + ip + " and tcp port 51655";
 }
 
+QString createICMPFilter(QString ip)
+{
+    return "icmp and dst host " + ip;
+}
+
 QString getMacAddressFromARP(const u_char* package)
 {
     sniff_ethernet* ether = (sniff_ethernet*)( package );
